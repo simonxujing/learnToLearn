@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>上瘾式学习 · 学习纠偏打卡</title>
+<style>
+  :root {
+    --bg: #eef2f7;
+    --bg-soft: #ffffff;
+    --card: #ffffff;
+    --card-2: #f1f5f9;
+    --line: #e2e8f0;
+    --txt: #1a2430;
+    --txt-dim: #5a6b7b;
+    --txt-faint: #94a3b8;
+    --accent: #16a34a;
+    --accent-2: #0284c7;
+    --primary: #38bdf8;
+    --warn: #d97706;
+    --danger: #dc2626;
+    --purple: #9333ea;
+    --radius: 14px;
+    --shadow: 0 6px 22px rgba(15,30,50,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: radial-gradient(1200px 600px at 80% -10%, #dce8f5 0%, var(--bg) 55%);
+    color: var(--txt);
+    min-height: 100vh;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 18px 16px 90px; }
+
+  /* Header */
+  header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 4px 18px;
+  }
+  .logo {
+    width: 42px; height: 42px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    display: grid; place-items: center; font-size: 22px; box-shadow: var(--shadow);
+  }
+  header h1 { font-size: 19px; letter-spacing: .5px; }
+  header p { font-size: 12px; color: var(--txt-dim); }
+  .streak-badge {
+    margin-left: auto; background: var(--card); border: 1px solid var(--line);
+    border-radius: 999px; padding: 6px 14px; font-size: 13px; font-weight: 600;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .streak-badge b { color: var(--warn); }
+
+  /* Tabs */
+  nav.tabs {
+    position: sticky; top: 0; z-index: 20;
+    display: flex; gap: 4px; background: rgba(255,255,255,.92);
+    backdrop-filter: blur(8px); padding: 8px 0; margin-bottom: 18px;
+    border-bottom: 1px solid var(--line);
+  }
+  nav.tabs button {
+    flex: 1; background: transparent; border: 0; color: var(--txt-dim);
+    padding: 9px 4px; border-radius: 10px; font-size: 13.5px; cursor: pointer;
+    font-weight: 600; transition: .15s; font-family: inherit;
+  }
+  nav.tabs button:hover { color: var(--txt); background: var(--bg-soft); }
+  nav.tabs button.active { color: #08130c; background: var(--primary); }
+
+  /* Cards */
+  .card {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px; margin-bottom: 14px; box-shadow: var(--shadow);
+  }
+  .card h2 { font-size: 15px; margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
+  .card .sub { font-size: 12px; color: var(--txt-dim); margin-bottom: 12px; }
+  .section-title { font-size: 13px; color: var(--txt-faint); text-transform: uppercase; letter-spacing: 1px; margin: 4px 0 10px; }
+
+  /* Buttons */
+  .btn {
+    border: 0; border-radius: 10px; padding: 10px 16px; font-size: 14px;
+    font-weight: 600; cursor: pointer; font-family: inherit; transition: .15s;
+  }
+  .btn-primary { background: var(--primary); color: #08130c; }
+  .btn-primary:hover { filter: brightness(1.07); }
+  .btn-ghost { background: var(--card-2); color: var(--txt); border: 1px solid var(--line); }
+  .btn-ghost:hover { background: var(--line); }
+  .btn-sm { padding: 6px 12px; font-size: 12.5px; }
+  .btn:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* Forms */
+  label.field { display: block; margin-bottom: 12px; }
+  label.field span { display: block; font-size: 12.5px; color: var(--txt-dim); margin-bottom: 5px; }
+  input, select, textarea {
+    width: 100%; background: var(--bg-soft); border: 1px solid var(--line);
+    color: var(--txt); border-radius: 10px; padding: 10px 12px; font-size: 14px;
+    font-family: inherit; resize: vertical;
+  }
+  input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent-2); }
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .hint { font-size: 11.5px; color: var(--txt-faint); margin-top: 4px; }
+
+  /* Task flow */
+  .task-card { border-left: 3px solid var(--accent-2); }
+  .task-head { display: flex; align-items: flex-start; gap: 10px; }
+  .task-title { font-size: 15px; font-weight: 600; flex: 1; }
+  .task-meta { font-size: 11.5px; color: var(--txt-faint); }
+  .pill { display: inline-block; font-size: 11px; padding: 2px 8px; border-radius: 999px; background: var(--card-2); color: var(--txt-dim); margin-left: 4px; }
+
+  .steps { margin: 14px 0 6px; }
+  .step {
+    display: flex; gap: 10px; align-items: flex-start; padding: 9px 10px; border-radius: 10px;
+    cursor: pointer; transition: .12s; border: 1px solid transparent;
+  }
+  .step:hover { background: var(--bg-soft); }
+  .step .num {
+    flex: 0 0 26px; width: 26px; height: 26px; border-radius: 8px; background: var(--card-2);
+    display: grid; place-items: center; font-size: 13px; font-weight: 700; color: var(--txt-dim); border: 1px solid var(--line);
+  }
+  .step.done .num { background: var(--accent); color: #08130c; border-color: var(--accent); }
+  .step .body { flex: 1; }
+  .step .body .t { font-size: 13.5px; font-weight: 600; }
+  .step .body .d { font-size: 12px; color: var(--txt-dim); }
+  .step.done .body .t { color: var(--accent); text-decoration: line-through; text-decoration-color: var(--txt-faint); }
+
+  .blind-box { margin-top: 8px; background: var(--bg-soft); border: 1px dashed var(--warn); border-radius: 10px; padding: 10px; }
+  .blind-box .t { font-size: 12px; color: var(--warn); margin-bottom: 6px; font-weight: 600; }
+
+  .feynman { margin-top: 10px; }
+  .feynman .t { font-size: 12px; color: var(--purple); margin-bottom: 5px; font-weight: 600; }
+
+  .empty { text-align: center; color: var(--txt-faint); padding: 40px 10px; font-size: 14px; }
+  .empty .big { font-size: 38px; margin-bottom: 10px; }
+
+  /* Timer */
+  .timer-card { text-align: center; }
+  .ring { position: relative; width: 160px; height: 160px; margin: 6px auto 12px; }
+  .ring svg { transform: rotate(-90deg); }
+  .ring .time { position: absolute; inset: 0; display: grid; place-items: center; font-size: 30px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .timer-controls { display: flex; gap: 8px; justify-content: center; }
+  .dur-pick { display: flex; gap: 6px; justify-content: center; margin-bottom: 12px; flex-wrap: wrap; }
+  .dur-pick button { background: var(--card-2); border: 1px solid var(--line); color: var(--txt-dim); border-radius: 8px; padding: 6px 12px; font-size: 12.5px; cursor: pointer; font-family: inherit; }
+  .dur-pick button.active { background: var(--accent-2); color: #08130c; border-color: var(--accent-2); font-weight: 700; }
+
+  /* Anti-pattern */
+  .anti { background: rgba(248,113,113,.07); border: 1px solid rgba(248,113,113,.25); }
+  .anti h2 { color: var(--danger); }
+  .anti ul { list-style: none; }
+  .anti li { display: flex; gap: 8px; padding: 5px 0; font-size: 13px; color: var(--txt-dim); }
+  .anti li::before { content: "✕"; color: var(--danger); font-weight: 700; }
+
+  /* Review */
+  .review-item { border-left: 3px solid var(--warn); }
+  .review-item .when { font-size: 11.5px; color: var(--warn); font-weight: 600; }
+
+  /* Stats */
+  .stat-grid { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  .stat { background: var(--bg-soft); border: 1px solid var(--line); border-radius: 12px; padding: 14px; text-align: center; }
+  .stat .n { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .stat .l { font-size: 12px; color: var(--txt-dim); }
+  .ach { display: flex; align-items: center; gap: 10px; padding: 8px 0; font-size: 13px; }
+  .ach .ic { font-size: 20px; filter: grayscale(1) opacity(.4); }
+  .ach.got .ic { filter: none; }
+  .ach.got .name { color: var(--accent); font-weight: 600; }
+
+  /* Methods */
+  .method { border-left: 3px solid var(--purple); }
+  .method h3 { font-size: 14px; margin-bottom: 4px; }
+  .method p { font-size: 12.5px; color: var(--txt-dim); }
+
+  /* Clinic */
+  .toast {
+    position: fixed; left: 50%; bottom: 26px; transform: translateX(-50%) translateY(20px);
+    background: var(--card-2); border: 1px solid var(--accent); color: var(--txt);
+    padding: 12px 20px; border-radius: 12px; font-size: 13.5px; box-shadow: var(--shadow);
+    opacity: 0; pointer-events: none; transition: .3s; z-index: 100; max-width: 90%;
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  .banner {
+    background: linear-gradient(135deg, rgba(74,222,128,.15), rgba(56,189,248,.12));
+    border: 1px solid var(--accent); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px;
+    font-size: 13px; display: flex; gap: 10px; align-items: center;
+  }
+  .banner.due { border-color: var(--warn); background: linear-gradient(135deg, rgba(251,191,36,.15), rgba(248,113,113,.1)); }
+
+  .row-between { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .muted { color: var(--txt-dim); }
+  .small { font-size: 12px; }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .tag { font-size: 11px; padding: 3px 9px; border-radius: 999px; background: var(--card-2); border: 1px solid var(--line); color: var(--txt-dim); }
+  @media (max-width:560px){ .grid2 { grid-template-columns: 1fr; } .stat-grid{ grid-template-columns:1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="logo">📚</div>
+    <div>
+      <h1>上瘾式学习 · 纠偏打卡</h1>
+      <p>费曼 · 迷你番茄 · 间隔复习 一体化</p>
+    </div>
+    <div class="streak-badge" id="streakBadge" title="连续打卡天数">🔥 <b id="streakNum">0</b> 天</div>
+    <button class="btn btn-sm btn-ghost" onclick="manualSync()" title="从云端拉取 / 推送到云端">🔄 同步</button>
+    <span id="syncStatus" style="font-size:12px;color:var(--txt-dim);white-space:nowrap">💾 本地</span>
+  </header>
+
+  <nav class="tabs" id="tabs">
+    <button data-view="today" class="active">今日</button>
+    <button data-view="plans">计划</button>
+    <button data-view="review">复习</button>
+    <button data-view="stats">统计</button>
+    <button data-view="methods">方法</button>
+  </nav>
+
+  <main id="view"></main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ============================================================
+   上瘾式学习 · 学习纠偏打卡  —  单文件应用
+   本地存储 + 可选云端同步（Node 服务），多端共用一个数据源。
+   ============================================================ */
+
+const KEY = 'addictive_learning_v1';
+let DB = load();
+
+function load() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return { plans: [], tasks: [], checkins: {}, dailyReward: {}, settings: { notify: false } };
+}
+function saveLocal() { try { localStorage.setItem(KEY, JSON.stringify(DB)); } catch (e) {} }
+function setSync(text) { const el = document.getElementById('syncStatus'); if (el) el.textContent = text; }
+
+// —— 云端同步：多端共用一个数据源（无服务时自动回退本地）——
+async function pullFromServer() {
+  // 1) GitHub 优先
+  if (ghConfigured()) {
+    const g = await ghGet();
+    if (g.ok && g.exists && g.data) { setSync('☁️ GitHub'); return g.data; }
+    if (g.ok) return null;                 // 有配置但仓库无文件 → 视为空
+  }
+  // 2) 本地 Node 服务兜底
+  try {
+    const r = await fetch('/api/data', { cache: 'no-store' });
+    if (!r.ok) return null;
+    const txt = await r.text();
+    if (!txt || txt === '{}') return null;
+    setSync('☁️ 已同步');
+    return JSON.parse(txt);
+  } catch (e) { return null; }
+}
+async function pushToServer() {
+  // 1) GitHub 优先
+  if (ghConfigured()) {
+    const res = await ghPut(DB);
+    setSync(res.ok ? '☁️ GitHub' : '💾 本地');
+    if (res.ok) return true;
+  }
+  // 2) 本地 Node 服务兜底
+  try {
+    const r = await fetch('/api/data', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(DB) });
+    const ok = r.ok; setSync(ok ? '☁️ 已同步' : '💾 本地'); return ok;
+  } catch (e) { setSync('💾 本地'); return false; }
+}
+function save() { saveLocal(); pushToServer().catch(() => setSync('💾 本地')); }
+async function syncFromServer() {
+  try {
+    const remote = await pullFromServer();
+    if (remote) { DB = remote; saveLocal(); setSync('☁️ 已同步'); return; }
+  } catch (e) {}
+  // 云端无数据：把本地推上去作为种子
+  pushToServer().catch(() => setSync('💾 本地'));
+}
+async function manualSync() {
+  try {
+    const remote = await pullFromServer();
+    if (remote) { DB = remote; saveLocal(); setSync('☁️ 已同步'); render(); toast('已同步云端最新数据 ☁️'); }
+    else { await pushToServer(); toast('已推送到云端 ☁️'); }
+  } catch (e) { toast('未连接同步服务，使用本地存储 💾'); setSync('💾 本地'); }
+}
+// 空闲时自动拉取（不打断正在输入的内容）
+function startAutoSync() {
+  setInterval(async () => {
+    const ae = document.activeElement;
+    if (ae && (ae.tagName === 'INPUT' || ae.tagName === 'TEXTAREA')) return;
+    try {
+      const remote = await pullFromServer();
+      if (remote && JSON.stringify(remote) !== JSON.stringify(DB)) { DB = remote; saveLocal(); render(); }
+    } catch (e) {}
+  }, 20000);
+}
+
+/* ---------- GitHub 同步后端（多端共用数据源，无需自建服务器） ---------- */
+// Token 单独存于本机浏览器，绝不写入同步数据，避免泄露到仓库
+const GH_KEY = 'github_sync_cfg';
+function loadGHCfg() { try { return JSON.parse(localStorage.getItem(GH_KEY)) || {}; } catch (e) { return {}; } }
+function saveGHCfg(c) { try { localStorage.setItem(GH_KEY, JSON.stringify(c)); } catch (e) {} }
+function ghHeaders(extra) {
+  const c = loadGHCfg();
+  return Object.assign({ 'Authorization': 'Bearer ' + (c.token || ''), 'Accept': 'application/vnd.github+json', 'User-Agent': 'study-app' }, extra || {});
+}
+async function ghGet() {
+  const c = loadGHCfg();
+  if (!c.token || !c.owner || !c.repo) return { ok: false, reason: 'nocfg' };
+  const path = c.path || 'data.json';
+  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${encodeURIComponent(path)}`;
+  const r = await fetch(url, { headers: ghHeaders() });
+  if (r.status === 404) return { ok: true, exists: false };
+  if (!r.ok) return { ok: false, status: r.status };
+  const j = await r.json();
+  try {
+    const content = decodeURIComponent(escape(atob((j.content || '').replace(/\s+/g, ''))));
+    return { ok: true, exists: true, data: JSON.parse(content), sha: j.sha };
+  } catch (e) { return { ok: false, status: 'parse' }; }
+}
+async function ghPut(data) {
+  const c = loadGHCfg();
+  if (!c.token || !c.owner || !c.repo) return { ok: false, reason: 'nocfg' };
+  const path = c.path || 'data.json';
+  const url = `https://api.github.com/repos/${c.owner}/${c.repo}/contents/${encodeURIComponent(path)}`;
+  const cur = await ghGet();
+  const body = { message: 'study-app sync ' + new Date().toISOString(), content: btoa(unescape(encodeURIComponent(JSON.stringify(data)))) };
+  if (cur.ok && cur.exists) body.sha = cur.sha;
+  const r = await fetch(url, { method: 'PUT', headers: ghHeaders({ 'Content-Type': 'application/json' }), body: JSON.stringify(body) });
+  return { ok: r.ok, status: r.status };
+}
+function ghConfigured() { const c = loadGHCfg(); return !!(c.token && c.owner && c.repo); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+
+/* ---------- 日期工具 ---------- */
+function startOfDay(d) { const x = new Date(d); x.setHours(0,0,0,0); return x; }
+function addDays(d, n) { const x = startOfDay(d); x.setDate(x.getDate() + n); return x; }
+function dstr(d) { const x = startOfDay(d); return x.getFullYear() + '-' + String(x.getMonth()+1).padStart(2,'0') + '-' + String(x.getDate()).padStart(2,'0'); }
+function today() { return startOfDay(new Date()); }
+function todayStr() { return dstr(new Date()); }
+function fmtDate(d) { const x = startOfDay(d); return (x.getMonth()+1) + '月' + x.getDate() + '日'; }
+function daysBetween(a, b) { return Math.round((startOfDay(b) - startOfDay(a)) / 86400000); }
+
+/* ---------- 拆分引擎：把计划自动套用学习方法分解为微任务 ---------- */
+function decompose(plan) {
+  // 子主题：用户显式给出则用之，否则按总时长自动切块
+  let chunks = (plan.subtopics || []).map(s => s.trim()).filter(Boolean);
+  if (chunks.length === 0) {
+    const sessions = Math.max(1, Math.round((plan.totalMinutes || 60) / 15));
+    for (let i = 1; i <= sessions; i++) chunks.push('第 ' + i + ' 个知识块');
+  }
+  const perDay = Math.min(2, Math.max(1, plan.perDay || 2)); // 每日 1–2 个小任务
+  const base = startOfDay(plan.startDate);
+  const tasks = [];
+  let dayOff = 0, count = 0;
+  chunks.forEach((topic, i) => {
+    if (count >= perDay) { dayOff++; count = 0; }
+    const date = addDays(base, dayOff);
+    // 5–20 分钟可完成：总时长平均分到各块，并夹在 [5,20]
+    let dur = Math.round((plan.totalMinutes || (chunks.length * 15)) / chunks.length);
+    dur = Math.min(20, Math.max(5, dur));
+    tasks.push({
+      id: uid(), planId: plan.id, title: topic,
+      date: dstr(date), duration: dur,
+      status: { micro:false, input:false, recall:false, cross:false, review:false },
+      blindSpots: [], feynman: '', learnedDate: null,
+      reviews: { d2:false, d7:false, d30:false }, reviewDates: {}
+    });
+    count++;
+  });
+  return tasks;
+}
+
+/* ---------- 复习日期计算（学完当天起算） ---------- */
+function computeReviewDates(learnedDateStr) {
+  const ld = new Date(learnedDateStr);
+  return { d2: dstr(addDays(ld, 2)), d7: dstr(addDays(ld, 7)), d30: dstr(addDays(ld, 30)) };
+}
+
+/* ============================================================
+   视图渲染
+   ============================================================ */
+const view = document.getElementById('view');
+let current = 'today';
+
+const TABS = document.getElementById('tabs');
+TABS.addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  [...TABS.children].forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  current = b.dataset.view;
+  render();
+});
+
+function render() {
+  updateStreakBadge();
+  if (current === 'today') renderToday();
+  else if (current === 'plans') renderPlans();
+  else if (current === 'review') renderReview();
+  else if (current === 'stats') renderStats();
+  else if (current === 'methods') renderMethods();
+}
+
+function updateStreakBadge() {
+  document.getElementById('streakNum').textContent = currentStreak();
+}
+function currentStreak() {
+  let s = 0; const t = today();
+  // 如果今天还没打卡，从昨天往前数
+  let cursor = DB.checkins[todayStr()] ? t : addDays(t, -1);
+  while (DB.checkins[dstr(cursor)]) { s++; cursor = addDays(cursor, -1); }
+  return s;
+}
+function doCheckIn() {
+  const key = todayStr();
+  if (DB.checkins[key]) { toast('今天已经打卡啦 ✅'); return; }
+  DB.checkins[key] = { date: key, done: true };
+  save();
+  toast('打卡成功！🔥 坚持就是上瘾的开始');
+  render();
+}
+
+/* ---------- 今日视图 ---------- */
+function renderToday() {
+  const ts = todayStr();
+  const todays = DB.tasks.filter(t => t.date === ts);
+  let html = '';
+
+  // 打卡横幅
+  const checked = !!DB.checkins[ts];
+  html += `<div class="banner ${checked?'':'due'}">
+    <span style="font-size:20px">${checked?'✅':'⏰'}</span>
+    <div style="flex:1">${checked ? '今天已打卡，继续保持！' : '今天还没打卡，先点一下完成今日打卡 ～'}
+      <div class="small muted">今日任务 ${todays.filter(t=>isLearned(t)).length}/${todays.length} 完成</div>
+    </div>
+    <button class="btn btn-sm ${checked?'btn-ghost':'btn-primary'}" onclick="doCheckIn()">${checked?'已打卡':'打卡'}</button>
+  </div>`;
+
+  // 今日奖励提示（随机抽取 + 下一个里程碑）
+  {
+    const st = currentStreak();
+    const nr = nextReward(st);
+    if (!DB.dailyReward) DB.dailyReward = {};
+    const drawn = DB.dailyReward[todayStr()];
+    html += `<div class="card" style="border-left:3px solid var(--accent)">
+      <div class="row-between">
+        <div class="task-title" style="font-size:14px">🎁 今日奖励（随机抽取）</div>
+        <span class="pill" style="background:var(--accent);color:#08130c">🔥 ${st} 天</span>
+      </div>
+      <div style="margin-top:10px;padding:12px;border:1px solid var(--accent);border-radius:10px;background:var(--card-2);text-align:center">
+        <div class="small" style="color:var(--accent)">${drawn ? '抽到的奖励' : '点一下，随机抽取今日小奖励'}</div>
+        <div style="font-size:17px;font-weight:700;margin-top:4px">${drawn || '🎲 ？？？'}</div>
+      </div>
+      <div class="row-between" style="margin-top:10px">
+        <span class="small muted">${nr ? '里程碑：连续 '+nr.day+' 天 → '+nr.ic+nr.name+'（还差 '+(nr.day-st)+' 天）' : '已解锁全部里程碑奖励！'}</span>
+        <button class="btn btn-sm btn-primary" onclick="drawReward()">${drawn?'🎲 再抽一次':'🎲 抽奖励'}</button>
+      </div>
+    </div>`;
+  }
+
+  // 迷你番茄计时器
+  html += renderTimer();
+
+  // 反模式提醒
+  html += `<div class="card anti">
+    <h2>⛔ 今日低效行为警报</h2>
+    <div class="sub">只要出现以下行为之一，今天的学习基本等于自我感动：</div>
+    <ul>
+      <li>反复通读全文（看懂 ≠ 记住）</li>
+      <li>整段抄写笔记（手在动，脑没动）</li>
+      <li>大量划重点自我感动（重点划满 = 没有重点）</li>
+      <li>长时间熬夜硬学（睡眠才是记忆固化的关键）</li>
+    </ul>
+  </div>`;
+
+  // 今日任务
+  html += `<div class="section-title">今日学习任务（1–2 个小任务，5–20 分钟）</div>`;
+  if (todays.length === 0) {
+    html += `<div class="card empty"><div class="big">🍃</div>今天没有排定的任务。<br>去「计划」里添加一个学习计划，系统会自动拆解。</div>`;
+  } else {
+    todays.forEach(t => { html += renderTaskCard(t); });
+  }
+
+  view.innerHTML = html;
+}
+
+function isLearned(t) { return t.status.review; }
+
+function renderTaskCard(t) {
+  const plan = DB.plans.find(p => p.id === t.planId);
+  const steps = [
+    { k:'micro', n:1, t:'任务微拆', d:'确认今天只做这 1 个小任务（' + t.duration + ' 分钟可完成），不贪多' },
+    { k:'input', n:2, t:'输入', d:'简短阅读 / 看资料，禁止大段抄书、通篇划线' },
+    { k:'recall', n:3, t:'主动回忆', d:'合上书，白纸默写要点；卡壳处写入盲区' },
+    { k:'cross', n:4, t:'交叉练习', d:'换不同题型 / 场景练，避免单一重复' },
+    { k:'review', n:5, t:'1 分钟复盘', d:'用一句话口述今天学到的内容（费曼简易版）' },
+  ];
+  let s = '';
+  s += `<div class="card task-card">
+    <div class="task-head">
+      <div style="flex:1">
+        <div class="task-title">${esc(t.title)}</div>
+        <div class="task-meta">${plan?esc(plan.title):''} · 预计 ${t.duration} 分钟 ${isLearned(t)?'<span class="pill" style="background:var(--accent);color:#08130c">已完成</span>':''}</div>
+      </div>
+    </div>`;
+
+  s += `<div class="steps">`;
+  steps.forEach(st => {
+    const done = t.status[st.k];
+    s += `<div class="step ${done?'done':''}" onclick="toggleStep('${t.id}','${st.k}')">
+      <div class="num">${st.n}</div>
+      <div class="body"><div class="t">${st.t}</div><div class="d">${st.d}</div></div>
+    </div>`;
+    // 主动回忆步骤下展示盲区输入
+    if (st.k === 'recall') {
+      s += `<div class="blind-box">
+        <div class="t">🩹 卡壳盲区（主动回忆时写不出的地方）</div>
+        <textarea rows="2" placeholder="例：记不住协方差公式 / 分不清 A 与 B 的区别…" onchange="setBlind('${t.id}', this.value)">${esc(t.blindSpots.join('\n'))}</textarea>
+      </div>`;
+    }
+    // 复盘步骤下展示费曼口述
+    if (st.k === 'review') {
+      s += `<div class="feynman">
+        <div class="t">🗣️ 费曼口述（用一句话讲给小白听）</div>
+        <textarea rows="2" placeholder="例：梯度下降就像蒙眼下山，每次都往最陡的方向迈一小步。" onchange="setFeynman('${t.id}', this.value)">${esc(t.feynman)}</textarea>
+      </div>`;
+    }
+  });
+  s += `</div>`;
+
+  // 完成学习按钮：始终可点击，点击即把五步标记为已完成
+  s += `<div class="row-between" style="margin-top:10px">
+    <span class="small muted">${isLearned(t)?'🎉 已完成学习':'点击「完成学习」即把五步标记为完成'}</span>
+    <button class="btn btn-sm btn-primary" onclick="finishTask('${t.id}')">完成学习</button>
+  </div>`;
+
+  // 盲区提示
+  if (t.blindSpots.length && !isLearned(t)) {
+    s += `<div class="tag-row">${t.blindSpots.map(b=>`<span class="tag">🩹 ${esc(b)}</span>`).join('')}</div>`;
+  }
+  s += `</div>`;
+  return s;
+}
+
+/* ---------- 计时器（迷你番茄） ---------- */
+let timer = { total: 15*60, left: 15*60, running: false, iv: null };
+function renderTimer() {
+  const dur = Math.round(timer.total/60);
+  const left = timer.left;
+  const pct = timer.total ? (1 - left/timer.total) : 0;
+  const R = 70, C = 2*Math.PI*R;
+  const durs = [5,10,15,20];
+  return `<div class="card timer-card">
+    <h2>🍅 迷你番茄计时</h2>
+    <div class="sub">5–20 分钟专注，到点就停，靠频次上瘾而非时长</div>
+    <div class="dur-pick">
+      ${durs.map(d=>`<button class="${dur===d?'active':''}" onclick="setDur(${d})">${d}′</button>`).join('')}
+    </div>
+    <div class="ring">
+      <svg width="160" height="160">
+        <circle cx="80" cy="80" r="${R}" stroke="var(--line)" stroke-width="10" fill="none"/>
+        <circle cx="80" cy="80" r="${R}" stroke="var(--accent)" stroke-width="10" fill="none"
+          stroke-dasharray="${C}" stroke-dashoffset="${C*(1-pct)}" stroke-linecap="round"/>
+      </svg>
+      <div class="time">${fmtTime(left)}</div>
+    </div>
+    <div class="timer-controls">
+      <button class="btn btn-sm ${timer.running?'btn-ghost':'btn-primary'}" onclick="toggleTimer()">${timer.running?'暂停':'开始'}</button>
+      <button class="btn btn-sm btn-ghost" onclick="resetTimer()">重置</button>
+    </div>
+    <div class="hint" style="margin-top:8px">专注时默念：不抄书、不划线，闭眼能说出来才算懂。</div>
+  </div>`;
+}
+function fmtTime(s){ const m=Math.floor(s/60), x=s%60; return String(m).padStart(2,'0')+':'+String(x).padStart(2,'0'); }
+function setDur(m){ stopTimer(); timer.total=m*60; timer.left=m*60; render(); }
+function toggleTimer(){ timer.running?stopTimer():startTimer(); }
+function startTimer(){
+  if(timer.left<=0) timer.left=timer.total;
+  timer.running=true;
+  timer.iv=setInterval(()=>{ timer.left--; if(timer.left<=0){ stopTimer(); notify('⏰ 番茄结束！起身活动一下，靠频次上瘾。'); toast('番茄结束，休息一下～'); } renderTimerOnly(); },1000);
+  renderTimerOnly();
+}
+function stopTimer(){ timer.running=false; if(timer.iv){clearInterval(timer.iv); timer.iv=null;} }
+function resetTimer(){ stopTimer(); timer.left=timer.total; renderTimerOnly(); }
+function renderTimerOnly(){ // 局部刷新计时器避免整体重绘
+  const card=document.querySelector('.timer-card'); if(card) card.outerHTML=renderTimer();
+}
+
+/* ---------- 步骤交互 ---------- */
+function toggleStep(taskId, key) {
+  const t = DB.tasks.find(x=>x.id===taskId); if(!t) return;
+  t.status[key] = !t.status[key];
+  // 纠偏：没做主动回忆就别想直接复盘
+  if (key==='review' && !t.status.recall && t.status.review) {
+    t.status.review=false;
+    toast('⚠️ 纠偏：先「主动回忆」再复盘，否则是假学会');
+    render(); return;
+  }
+  // 勾选主动回忆时自动打开盲区编辑提示
+  save(); render();
+}
+function setBlind(taskId, val) {
+  const t = DB.tasks.find(x=>x.id===taskId); if(!t) return;
+  t.blindSpots = val.split('\n').map(s=>s.trim()).filter(Boolean);
+  save();
+}
+function setFeynman(taskId, val) {
+  const t = DB.tasks.find(x=>x.id===taskId); if(!t) return;
+  t.feynman = val.trim(); save();
+}
+function finishTask(taskId) {
+  const t = DB.tasks.find(x=>x.id===taskId); if(!t) return;
+  t.status = { micro:true, input:true, recall:true, cross:true, review:true }; // 点击即标记五步完成
+  t.learnedDate = todayStr();
+  t.reviewDates = computeReviewDates(t.learnedDate);
+  save();
+  toast('🎉 学会一个知识块！已生成 第2/7/30天 复习计划');
+  render();
+}
+
+/* ---------- 计划视图 ---------- */
+function renderPlans() {
+  let html = `<div class="card" style="border-left:3px solid var(--primary)">
+    <h2>📥 一键学习计划</h2>
+    <div class="sub">基于《【系规冲刺】彩色思维导图全章节带书签.pdf》：10-14~10-18 理论（第4~17章），10-19~10-22 四篇论文（各2小时），10-24 收尾。</div>
+    <button class="btn btn-primary" onclick="loadPreset()">载入「系规冲刺」11 天计划</button>
+  </div>`;
+  html += `<div class="section-title">新建学习计划</div>`;
+  html += `<div class="card">
+    <div class="grid2">
+      <label class="field"><span>计划名称</span><input id="p_title" placeholder="例：搞定《概率论》第3章" /></label>
+      <label class="field"><span>科目 / 分类</span><input id="p_subject" placeholder="例：考研数学" /></label>
+    </div>
+    <label class="field"><span>学习材料（简短描述）</span><textarea id="p_material" rows="2" placeholder="例：教材 P88-110 + 配套习题"></textarea></label>
+    <div class="grid2">
+      <label class="field"><span>总预计时长（分钟）</span><input id="p_total" type="number" min="15" value="90" /></label>
+      <label class="field"><span>开始日期</span><input id="p_start" type="date" value="${todayStr()}" /></label>
+    </div>
+    <label class="field"><span>每日任务数（1 或 2，越小越不易放弃）</span>
+      <select id="p_perday"><option value="1">1 个（最稳）</option><option value="2" selected>2 个</option></select>
+    </label>
+    <label class="field"><span>子主题（每行一个，留空则按总时长自动切块）</span>
+      <textarea id="p_subs" rows="3" placeholder="例：&#10;条件概率&#10;全概率公式&#10;贝叶斯定理"></textarea>
+      <div class="hint">系统会把每个子主题拆成 5–20 分钟微任务，自动套用五步法 + 间隔复习。</div>
+    </label>
+    <button class="btn btn-primary" onclick="createPlan()">＋ 生成学习计划与微任务</button>
+  </div>`;
+
+  html += `<div class="section-title">我的计划（${DB.plans.length}）</div>`;
+  if (DB.plans.length === 0) {
+    html += `<div class="card empty"><div class="big">📭</div>还没有计划，上面新建一个吧。</div>`;
+  } else {
+    DB.plans.slice().reverse().forEach(p => {
+      const tasks = DB.tasks.filter(t=>t.planId===p.id);
+      const done = tasks.filter(isLearned).length;
+      const firstDue = tasks.length?fmtDate(tasks[0].date):'-';
+      const lastDue = tasks.length?fmtDate(tasks[tasks.length-1].date):'-';
+      html += `<div class="card">
+        <div class="row-between">
+          <div><div class="task-title">${esc(p.title)}</div>
+            <div class="task-meta">${esc(p.subject||'')} · 共 ${tasks.length} 个微任务 · 已完成 ${done}</div></div>
+          <button class="btn btn-sm btn-ghost" onclick="delPlan('${p.id}')">删除</button>
+        </div>
+        <div class="tag-row">
+          <span class="tag">📅 ${firstDue} → ${lastDue}</span>
+          <span class="tag">⏱️ ${p.totalMinutes} 分钟</span>
+          <span class="tag">🍅 每日 ${p.perDay} 个</span>
+        </div>
+      </div>`;
+    });
+  }
+  view.innerHTML = html;
+}
+
+function createPlan() {
+  const title = document.getElementById('p_title').value.trim();
+  if (!title) { toast('请填写计划名称'); return; }
+  const plan = {
+    id: uid(),
+    title,
+    subject: document.getElementById('p_subject').value.trim(),
+    material: document.getElementById('p_material').value.trim(),
+    totalMinutes: Math.max(15, parseInt(document.getElementById('p_total').value)||90),
+    startDate: document.getElementById('p_start').value || todayStr(),
+    perDay: parseInt(document.getElementById('p_perday').value)||2,
+    subtopics: document.getElementById('p_subs').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    createdAt: Date.now()
+  };
+  const tasks = decompose(plan);
+  DB.plans.push(plan);
+  DB.tasks.push(...tasks);
+  save();
+  toast(`已生成 ${tasks.length} 个微任务，从 ${fmtDate(plan.startDate)} 开始 ✅`);
+  render();
+}
+function delPlan(id) {
+  if (!confirm('删除该计划及其所有微任务？')) return;
+  DB.plans = DB.plans.filter(p=>p.id!==id);
+  DB.tasks = DB.tasks.filter(t=>t.planId!==id);
+  save(); render();
+}
+
+/* ---------- 预设：系规冲刺（理论+论文，10-14~10-24） ---------- */
+const PM = '2026-10-';                       // 月份前缀（10月）
+const pDay = n => PM + String(n).padStart(2, '0');
+function makeTask(planId, title, date, minutes) {
+  return {
+    id: uid(), planId, title, date, duration: minutes,
+    status: { micro:false, input:false, recall:false, cross:false, review:false },
+    blindSpots: [], feynman: '', learnedDate: null,
+    reviews: { d2:false, d7:false, d30:false }, reviewDates: {}
+  };
+}
+// 显式任务表：[标题, 日(10月), 分钟]
+const PRESET_XIGUI = {
+  title: '系规冲刺 · 理论+论文 (10-14~10-24)',
+  subject: '系统规划与管理师（系规）',
+  material: '【系规冲刺】彩色思维导图全章节带书签.pdf',
+  startDate: '2026-10-14',
+  tasks: [
+    // 阶段A 理论学习：第4~17章，10-14~10-18，约15分钟/章
+    ['第4章 信息系统规划',14,15],['第5章 应用系统规划',14,15],['第6章 云资源规划',14,15],
+    ['第7章 网络环境规划',15,15],['第8章 数据资源规划',15,15],['第9章 信息安全规划',15,15],
+    ['第10章 云原生系统规划',16,15],['第11章 信息系统治理',16,15],['第12章 信息系统服务管理',16,15],
+    ['第13章 人员管理',17,15],['第14章 规范与过程管理',17,15],['第15章 技术与研发管理',17,15],
+    ['第16章 资源与工具管理',18,15],['第17章 信息系统项目管理',18,15],
+    // 阶段B 论文 ×4：10-19~10-22，每个2小时
+    ['论文·信息系统服务管理',19,120],['论文·技术与研发管理',20,120],
+    ['论文·信息系统规划',21,120],['论文·应用系统规划',22,120],
+    // 收尾（用户未指定，按需可删）
+    ['论文交叉复盘·四篇要点输出与盲区回看',23,60],
+    ['总复盘·全书盲区抽检 + 四篇论文要点默写',24,60]
+  ].map(([title, day, minutes]) => ({ title, date: pDay(day), minutes }))
+};
+function loadPreset(silent) {
+  // 清掉旧版系规计划，载入最新排期
+  DB.plans = DB.plans.filter(p => !/^系规冲刺/.test(p.title));
+  DB.tasks = DB.tasks.filter(t => DB.plans.some(p => p.id === t.planId));
+  const plan = { id: uid(), title: PRESET_XIGUI.title, subject: PRESET_XIGUI.subject,
+    material: PRESET_XIGUI.material, startDate: PRESET_XIGUI.startDate, createdAt: Date.now(),
+    totalMinutes: 0, perDay: 0, subtopics: [] };
+  const tasks = PRESET_XIGUI.tasks.map(s => makeTask(plan.id, s.title, s.date, s.minutes));
+  plan.totalMinutes = tasks.reduce((a, t) => a + t.duration, 0);
+  const days = new Set(tasks.map(t => t.date)).size;
+  plan.perDay = Math.ceil(tasks.length / days);
+  DB.plans.push(plan);
+  DB.tasks.push(...tasks);
+  save();
+  if (!silent) { toast('已载入：' + tasks.length + ' 个任务，10-14~10-24，已排好间隔复习'); render(); }
+  return tasks.length;
+}
+function ensurePreset() {
+  if (DB.plans.some(p => p.title === PRESET_XIGUI.title)) return; // 已是最新版，保留进度
+  loadPreset(true);
+}
+
+/* ---------- 复习视图（间隔复习） ---------- */
+function renderReview() {
+  const ts = todayStr();
+  // 取学完且复习日期 == 今天、未完成的
+  const due = DB.tasks.filter(t => t.learnedDate && (
+    (t.reviewDates.d2===ts && !t.reviews.d2) ||
+    (t.reviewDates.d7===ts && !t.reviews.d7) ||
+    (t.reviewDates.d30===ts && !t.reviews.d30)
+  ));
+  let html = `<div class="card">
+    <h2>📅 间隔复习时间表</h2>
+    <div class="sub">到点复习，<b style="color:var(--warn)">只看盲区</b>，不要从头重学。</div>
+    <div class="tag-row">
+      <span class="tag">学完当天：简短回顾</span>
+      <span class="tag">第 2 天：复习盲区</span>
+      <span class="tag">第 7 天：整体复盘</span>
+      <span class="tag">第 30 天：抽检回忆</span>
+    </div>
+  </div>`;
+
+  if (due.length === 0) {
+    html += `<div class="card empty"><div class="big">🌟</div>今天没有到期的复习。<br>完成学习任务后，系统会在第 2 / 7 / 30 天提醒你回来复习。</div>`;
+  } else {
+    html += `<div class="banner due"><span>🔔</span><div>今天有 <b>${due.length}</b> 个复习待办，只回看盲区即可。</div></div>`;
+    due.forEach(t => {
+      let stage = t.reviewDates.d2===ts?'第 2 天·复习盲区': t.reviewDates.d7===ts?'第 7 天·整体复盘':'第 30 天·抽检回忆';
+      const plan = DB.plans.find(p=>p.id===t.planId);
+      let blind = t.blindSpots.length ? t.blindSpots.map(b=>`<li>🩹 ${esc(b)}</li>`).join('') : '<li class="muted">（无记录盲区，凭记忆抽检回忆）</li>';
+      html += `<div class="card review-item">
+        <div class="when">${stage}</div>
+        <div class="task-title" style="margin:4px 0">${esc(t.title)}</div>
+        <div class="task-meta">${plan?esc(plan.title):''} · 学完于 ${t.learnedDate}</div>
+        <div class="sub" style="margin-top:8px;color:var(--warn)">只看这些卡壳点：</div>
+        <ul style="list-style:none;font-size:13px">${blind}</ul>
+        <div class="row-between" style="margin-top:8px">
+          <span class="small muted">回看盲区后打勾 →</span>
+          <button class="btn btn-sm btn-primary" onclick="markReview('${t.id}')">完成复习</button>
+        </div>
+      </div>`;
+    });
+  }
+  view.innerHTML = html;
+}
+function markReview(taskId) {
+  const t = DB.tasks.find(x=>x.id===taskId); if(!t) return;
+  const ts = todayStr();
+  if (t.reviewDates.d2===ts) t.reviews.d2=true;
+  if (t.reviewDates.d7===ts) t.reviews.d7=true;
+  if (t.reviewDates.d30===ts) t.reviews.d30=true;
+  save();
+  toast('复习完成 ✅ 记忆又加固了一层');
+  render();
+}
+
+/* ---------- 奖励路线图（上瘾式学习：用小奖励驱动坚持） ---------- */
+const REWARDS = [
+  { day:1,  ic:'🍓', name:'一份水果 / 酸奶',       desc:'完成当天打卡的小奖励，即时满足' },
+  { day:3,  ic:'🥤', name:'一杯喜欢的饮品',         desc:'坚持 3 天，给自己加点甜' },
+  { day:7,  ic:'🎮', name:'玩 30 分钟游戏',         desc:'连续一周，放松一下' },
+  { day:14, ic:'🛍️', name:'一件小物件 / 小额购物',   desc:'两周坚持的仪式感' },
+  { day:21, ic:'🎬', name:'看一场电影',             desc:'三周达成，犒劳自己' },
+  { day:30, ic:'🍱', name:'一顿大餐',               desc:'连续一月，狠狠奖励自己' },
+];
+function nextReward(streak) {
+  return REWARDS.find(r => r.day > streak) || null;
+}
+
+/* ---------- 随机奖励池（点击随机抽取） ---------- */
+const RANDOM_REWARDS = [
+  '🍓 吃一份水果 / 酸奶',
+  '🥤 喝一杯无糖饮料',
+  '🎵 听一首喜欢的歌曲',
+  '📺 看一段喜欢的视频',
+  '📖 看几页小说',
+  '🚶 出门散步 15 分钟',
+  '🏸 打 2 小时羽毛球',
+  '🚴 骑公路车兜风',
+  '☕ 喝一杯喜欢的咖啡 / 茶',
+  '🛀 泡个热水澡放松',
+  '🎮 玩 30 分钟游戏',
+  '🧘 做 10 分钟拉伸 / 冥想',
+];
+function drawReward() {
+  if (!DB.dailyReward) DB.dailyReward = {};
+  const pool = (DB.rewardPool && DB.rewardPool.length) ? DB.rewardPool : RANDOM_REWARDS;
+  if (!pool.length) { toast('奖励池为空，请先到「统计」页添加奖励'); return; }
+  const pick = pool[Math.floor(Math.random() * pool.length)];
+  DB.dailyReward[todayStr()] = pick;
+  save();
+  toast('🎁 今日奖励：' + pick);
+  render();
+}
+// 奖励池维护（可手动增删改）
+if (!DB.rewardPool || DB.rewardPool.length === 0) DB.rewardPool = RANDOM_REWARDS.slice();
+function updateReward(i, val) {
+  val = String(val || '').trim();
+  if (!DB.rewardPool) DB.rewardPool = [];
+  if (val) { DB.rewardPool[i] = val; save(); }
+}
+function delReward(i) {
+  DB.rewardPool.splice(i, 1); save(); render();
+}
+function addReward() {
+  const el = document.getElementById('newReward'); if (!el) return;
+  const v = el.value.trim();
+  if (!v) { toast('请输入奖励内容'); return; }
+  if (!DB.rewardPool) DB.rewardPool = [];
+  DB.rewardPool.push(v); save(); render();
+}
+
+/* ---------- 统计视图 ---------- */
+function renderStats() {
+  const totalTasks = DB.tasks.length;
+  const learned = DB.tasks.filter(isLearned).length;
+  const reviewsDone = DB.tasks.reduce((a,t)=>a + (t.reviews.d2?1:0)+(t.reviews.d7?1:0)+(t.reviews.d30?1:0), 0);
+  const checkinDays = Object.keys(DB.checkins).length;
+  const streak = currentStreak();
+
+  let html = `<div class="stat-grid">
+    <div class="stat"><div class="n">${streak}</div><div class="l">🔥 连续打卡(天)</div></div>
+    <div class="stat"><div class="n">${checkinDays}</div><div class="l">累计打卡(天)</div></div>
+    <div class="stat"><div class="n">${learned}/${totalTasks}</div><div class="l">微任务学会</div></div>
+    <div class="stat"><div class="n">${reviewsDone}</div><div class="l">间隔复习完成</div></div>
+  </div>`;
+
+  // 成就（上瘾式学习：用小成就驱动多巴胺）
+  const achs = [
+    { ic:'🌱', name:'种下第一颗', cond: totalTasks>=1 },
+    { ic:'✅', name:'完成首个知识块', cond: learned>=1 },
+    { ic:'🔥', name:'连续打卡 3 天', cond: streak>=3 },
+    { ic:'🔥', name:'连续打卡 7 天', cond: streak>=7 },
+    { ic:'🍅', name:'打卡 5 天', cond: checkinDays>=5 },
+    { ic:'🔁', name:'完成首次间隔复习', cond: reviewsDone>=1 },
+    { ic:'🧠', name:'学会 10 个知识块', cond: learned>=10 },
+    { ic:'👑', name:'连续打卡 30 天', cond: streak>=30 },
+  ];
+  html += `<div class="section-title">🏆 成就墙（小成就会上瘾）</div><div class="card">`;
+  achs.forEach(a=>{
+    html += `<div class="ach ${a.cond?'got':''}"><span class="ic">${a.ic}</span><span class="name">${a.name}</span>${a.cond?' <span class="muted small">已解锁</span>':''}</div>`;
+  });
+  html += `</div>`;
+
+  // 奖励路线图
+  const nr = nextReward(streak);
+  html += `<div class="section-title">🎁 奖励路线图（打卡越久，奖励越大）</div><div class="card">`;
+  REWARDS.forEach(r => {
+    const got = streak >= r.day;
+    const isNext = nr && nr.day === r.day;
+    html += `<div class="ach ${got?'got':''}" style="${isNext?'background:var(--card-2);border-radius:10px;padding:8px':''}">
+      <span class="ic">${r.ic}</span>
+      <span style="flex:1"><span class="name">${r.name}</span> <span class="muted small">· ${r.desc}</span></span>
+      <span class="small ${got?'':'muted'}">${got?'✅ 已解锁':'连续 '+r.day+' 天'}</span>
+    </div>`;
+  });
+  html += `</div>`;
+  if (nr) html += `<div class="banner" style="border-color:var(--accent-2)"><span>🎯</span><div>下一个奖励：连续 <b>${nr.day}</b> 天 → ${nr.ic} ${nr.name}（还差 <b>${nr.day - streak}</b> 天）</div></div>`;
+
+  // 奖励池管理（可手动维护）
+  html += `<div class="section-title">🛠️ 奖励池管理（随机抽奖励的来源）</div><div class="card">
+    <div class="sub">点「抽奖励」会从下面池子里随机选一个。可直接改文字、删除或新增。</div>`;
+  (DB.rewardPool || []).forEach((rw, i) => {
+    html += `<div style="display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)">
+      <input value="${esc(rw)}" onchange="updateReward(${i}, this.value)" style="flex:1"/>
+      <button class="btn btn-sm btn-ghost" onclick="delReward(${i})">✕</button>
+    </div>`;
+  });
+  html += `<div style="display:flex;gap:8px;margin-top:10px">
+    <input id="newReward" placeholder="输入新奖励，如：吃一块蛋糕"/>
+    <button class="btn btn-sm btn-primary" onclick="addReward()">添加</button>
+  </div>`;
+  html += `</div>`;
+
+  // GitHub 云端同步设置
+  const cfg = loadGHCfg();
+  const backendTxt = ghConfigured() ? 'GitHub 云端' : (window.location.protocol === 'file:' ? '本地（未配置）' : '本地服务');
+  html += `<div class="section-title">☁️ 云端同步设置（GitHub）</div><div class="card">
+    <div class="sub">把数据存进 GitHub 仓库文件，手机/PC 任意地点自动共用，无需自建服务器。需一个含 <b>repo</b> 权限的 Personal Access Token（建议只授权当前仓库）。Token 仅存本机浏览器，不会写入同步数据。</div>
+    <label class="field"><span>仓库所有者 (owner)</span><input id="gh_owner" value="${esc(cfg.owner||'')}" placeholder="如 isalpha"/></label>
+    <label class="field"><span>仓库名 (repo)</span><input id="gh_repo" value="${esc(cfg.repo||'')}" placeholder="如 study-sync"/></label>
+    <label class="field"><span>文件路径</span><input id="gh_path" value="${esc(cfg.path||'data.json')}"/></label>
+    <label class="field"><span>Personal Access Token</span><input id="gh_token" type="password" value="${esc(cfg.token||'')}" placeholder="ghp_..."/></label>
+    <div class="row-between" style="margin-top:6px">
+      <span class="small muted">当前后端：<b>${backendTxt}</b></span>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-sm btn-ghost" onclick="saveGHCfgUI()">保存</button>
+        <button class="btn btn-sm btn-ghost" onclick="testGHSync()">测试</button>
+        <button class="btn btn-sm btn-primary" onclick="manualSync()">立即同步</button>
+      </div>
+    </div>
+  </div>`;
+
+  view.innerHTML = html;
+}
+
+function saveGHCfgUI() {
+  const cfg = {
+    owner: (document.getElementById('gh_owner').value || '').trim(),
+    repo: (document.getElementById('gh_repo').value || '').trim(),
+    path: (document.getElementById('gh_path').value || 'data.json').trim(),
+    token: document.getElementById('gh_token').value
+  };
+  if (!cfg.owner || !cfg.repo || !cfg.token) { toast('请填完整 owner / repo / token'); return; }
+  saveGHCfg(cfg);
+  toast('✅ GitHub 配置已保存（仅本机）');
+  render();
+}
+async function testGHSync() {
+  const c = loadGHCfg();
+  if (!c.token || !c.owner || !c.repo) { toast('请先填写完整配置并保存'); return; }
+  const g = await ghGet();
+  if (g.ok && g.exists) toast('✅ 连接成功，已读取仓库数据');
+  else if (g.ok) toast('✅ 连接成功，仓库暂无数据文件（将自动新建）');
+  else toast('❌ 连接失败：' + (g.status || '检查 token / 仓库 / 权限'));
+}
+function renderMethods() {
+  const ms = [
+    { h:'🎯 上瘾式学习', p:'把大目标拆成能立刻完成的小任务，每完成一个就打勾拿反馈。靠「小胜 → 多巴胺 → 想再来」的循环形成上瘾，而不是靠意志硬扛。本软件的打卡、成就、连续天数都在复刻这个机制。' },
+    { h:'🗣️ 费曼学习法', p:'检验是否真懂的唯一标准：用大白话把知识讲给小白听。讲不通的地方就是盲区。本软件「1 分钟复盘」即费曼简易版——一句话口述今日所学。' },
+    { h:'🍅 迷你番茄法', p:'传统番茄 25 分钟太长易放弃。迷你番茄用 5–20 分钟短冲刺，频次 > 时长，降低启动阻力，靠多次小专注累积上瘾。' },
+    { h:'🔁 间隔复习（间隔效应）', p:'遗忘曲线告诉我们：学完立刻丢 = 白学。在第 2 / 7 / 30 天回看（只看盲区），用最少时间把记忆钉死。' },
+    { h:'🧩 主动回忆 + 交叉练习', p:'主动回忆（闭眼默写）比反复阅读效率高数倍；交叉练习（换题型/场景）避免「虚假熟练」，让知识真正可迁移。' },
+  ];
+  let html = `<div class="section-title">内置学习方法</div>`;
+  ms.forEach(m=>{ html += `<div class="card method"><h3>${m.h}</h3><p>${m.p}</p></div>`; });
+
+  html += `<div class="section-title">每日固定流程</div><div class="card">
+    <div class="step"><div class="num">1</div><div class="body"><div class="t">任务微拆</div><div class="d">今日只定 1–2 个小任务（5–20 分钟），不贪多</div></div></div>
+    <div class="step"><div class="num">2</div><div class="body"><div class="t">输入</div><div class="d">简短阅读/看资料，禁止大段抄书、通篇划线</div></div></div>
+    <div class="step"><div class="num">3</div><div class="body"><div class="t">主动回忆</div><div class="d">合上书白纸默写，卡壳处标记盲区</div></div></div>
+    <div class="step"><div class="num">4</div><div class="body"><div class="t">交叉练习</div><div class="d">轮换题型/场景，避免单一重复</div></div></div>
+    <div class="step"><div class="num">5</div><div class="body"><div class="t">1 分钟复盘</div><div class="d">一句话口述今日所学（费曼简易版）</div></div></div>
+  </div>`;
+
+  html += `<div class="section-title">🧠 辅助小规则</div><div class="card">
+    <div class="ach"><span class="ic">🖼️</span><span class="name">图像联想 / 编小故事</span> 难点知识用画面或故事辅助记忆</div>
+    <div class="ach"><span class="ic">😴</span><span class="name">睡眠优先</span> 睡眠固化记忆，熬夜收益极低</div>
+    <div class="ach"><span class="ic">✅</span><span class="name">正向反馈</span> 完成一项打勾，积累小成就感</div>
+    <div class="ach"><span class="ic">🩹</span><span class="name">卡顿回看盲区</span> 优先回看标记盲区，不要从头重学</div>
+  </div>`;
+  view.innerHTML = html;
+}
+
+/* ---------- 工具 ---------- */
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+let toastTimer;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>el.classList.remove('show'), 2600);
+}
+function notify(msg) {
+  if (DB.settings.notify && 'Notification' in window && Notification.permission==='granted') {
+    new Notification('上瘾式学习', { body: msg });
+  }
+}
+
+/* ---------- 启动：检查今日到期 & 提醒 ---------- */
+function bootCheck() {
+  const ts = todayStr();
+  const todays = DB.tasks.filter(t=>t.date===ts && !isLearned(t)).length;
+  const dueRev = DB.tasks.filter(t=>t.learnedDate && (
+    (t.reviewDates.d2===ts && !t.reviews.d2)||(t.reviewDates.d7===ts && !t.reviews.d7)||(t.reviewDates.d30===ts && !t.reviews.d30)
+  )).length;
+  if (todays>0 || dueRev>0) {
+    // 静默记录，横幅已在 Today/Review 展示；可在此请求通知权限
+    if (!DB.settings.notify && 'Notification' in window) {
+      // 不强制，留待用户点打卡时自然触发
+    }
+  }
+}
+
+(async () => {
+  await syncFromServer();   // 优先从云端拉取共享数据
+  ensurePreset();           // 自动载入/迁移到最新版系规冲刺计划
+  render();
+  bootCheck();
+  startAutoSync();          // 后台自动同步（多端共用数据源）
+})();
+</script>
+</body>
+</html>
